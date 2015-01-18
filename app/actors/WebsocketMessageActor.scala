@@ -1,12 +1,13 @@
 package actors
 
-import akka.actor.{Actor, ActorRef, Props}
+import akka.actor.Actor
 import controllers.Application.WSLink
 import messages.{ClientRegistersForMessages, WorkCycleCompleted}
 import play.api.libs.iteratee.Concurrent.Channel
-import play.api.libs.iteratee.{Concurrent, Enumerator, Iteratee}
+import play.api.libs.iteratee.{Concurrent, Iteratee}
 
 import scala.collection.immutable.ListMap
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class WebsocketMessageActor extends Actor {
   var clientMessengerMap = ListMap.empty[Int, Channel[String]]

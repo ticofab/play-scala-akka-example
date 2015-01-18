@@ -3,9 +3,11 @@ package controllers
 import actors.BossActor
 import akka.actor.{ActorSystem, Props}
 import akka.pattern.ask
-import messages.ClientRegistersForMessages
+import consts.Consts
+import messages.{ClientConnected, ClientRegistersForMessages}
 import play.api.libs.iteratee.{Enumerator, Iteratee}
 import play.api.mvc.{Action, Controller, WebSocket}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 
@@ -18,10 +20,15 @@ object Application extends Controller {
     Ok(views.html.index("Your new application is ready."))
   }
 
+  def newClient = Action.async {
+    val futureId = (bossActor ? ClientConnected)(Consts.askTimeout).mapTo[Int]
+    futureId.map(id => Ok(id.toString))
+  }
+
   def openWebsocket(clientId: Int) = WebSocket.tryAccept[String] {
     request =>
-      val wsLinkFuture: Future[WSLink] = (bossActor ? ClientRegistersForMessages(clientId)).mapTo[WSLink]
-      wsLinkFuture map {
+      val futureWSLink: Future[WSLink] = (bossActor ? ClientRegistersForMessages(clientId))(Consts.askTimeout).mapTo[WSLink]
+      futureWSLink map {
         case x: WSLink => Right(x)
         case _ => Left(NotFound)
       }
