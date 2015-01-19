@@ -1,4 +1,4 @@
-@(id: String, totalWorkCycles: String)
+@(id: String, activeClients: String, totalWorkCycles: String)
 <!DOCTYPE html>
 
 <html>
@@ -19,7 +19,7 @@
     <div>
         <div>Hi, you're client number @id</div>
         <div>
-            Active clients: <span id="activeClients">1</span>
+            Active clients: <span id="activeClients">@activeClients</span>
         </div>
         <div>
             Work cycles completed: <span id="workCycle">0</span> of @totalWorkCycles

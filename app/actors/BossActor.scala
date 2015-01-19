@@ -6,7 +6,7 @@ import controllers.Application
 import messages._
 
 class BossActor extends Actor {
-  var clientIdCounter = 1
+  var clientIdCounter = 0
   var activeClients = 0
 
   override def receive: Receive = {
@@ -14,10 +14,10 @@ class BossActor extends Actor {
     case ClientConnected =>
       // creates a new WorkerActor and tell him to start doing some work
       val newWorker = ActorSystem().actorOf(Props[WorkerActor])
-      newWorker ! StartWorking(clientIdCounter)
-      sender ! clientIdCounter
       clientIdCounter = clientIdCounter + 1
       activeClients = activeClients + 1
+      newWorker ! StartWorking(clientIdCounter)
+      sender ! clientIdCounter.toString + "," + activeClients.toString
       Application.messengerActor ! ActiveClientsChanged(activeClients)
 
     case WorkCycleCompleted(clientId, cycle) =>

@@ -4,7 +4,7 @@ import actors.{BossActor, WebsocketMessageActor}
 import akka.actor.{ActorSystem, Props}
 import akka.pattern.ask
 import consts.Consts
-import messages.{ClientRegistersForActiveClients, ClientConnected, ClientRegistersForMessages}
+import messages.{ClientConnected, ClientRegistersForActiveClients, ClientRegistersForMessages}
 import play.api.libs.iteratee.{Enumerator, Iteratee}
 import play.api.mvc.{Action, Controller, WebSocket}
 
@@ -18,8 +18,13 @@ object Application extends Controller {
   val bossActor = ActorSystem().actorOf(Props[BossActor])
 
   def newClient = Action.async {
-    val futureId = (bossActor ? ClientConnected)(Consts.askTimeout).mapTo[Int]
-    futureId.map(id => Ok(views.html.index(id.toString, Consts.totalWorkCycle.toString)))
+    val futureStr = (bossActor ? ClientConnected)(Consts.askTimeout).mapTo[String]
+    futureStr.map(str => {
+      val sepIndex = str.indexOf(',')
+      val id = str.substring(0, sepIndex)
+      val activeClients = str.substring(sepIndex + 1)
+      Ok(views.html.index(id, activeClients, Consts.totalWorkCycle.toString))
+    })
   }
 
   def getCycles(clientId: Int) = WebSocket.tryAccept[String] {
