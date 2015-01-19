@@ -28,6 +28,7 @@ class BossActor extends Actor {
         sender ! PoisonPill
         activeClients = activeClients - 1
         Application.messengerActor ! ActiveClientsChanged(activeClients)
+        if (activeClients == 0) clientIdCounter = 0
       }
 
   }
