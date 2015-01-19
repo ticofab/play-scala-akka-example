@@ -1,7 +1,27 @@
-@(message: String)
+@(id: String)
+<!DOCTYPE html>
 
-@main("Welcome to Play") {
+<html>
+<head>
+    <title>My First Html Attempt in Play</title>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="@routes.Assets.at("javascripts/ws-client.js")" type="text/javascript"></script>
+    <script>
+        $(document).ready(function() {
+            console.log("ready!");
+            connectToWS("ws://localhost:9000/register?id=" + @id);
+        });
+    </script>
+</head>
+<body>
+    <div>
+        <div>Hi, you're client number @id</div>
+        <div>
+            Work cycles completed: <span id="workCycle">0</span>
+        </div>
+    </div>
 
-    @play20.welcome(message)
-
-}
+</body>
+</html>

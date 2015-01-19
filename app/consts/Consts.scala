@@ -4,5 +4,5 @@ import scala.concurrent.duration.DurationInt
 
 object Consts {
       val askTimeout = 3.seconds
-      val totalWorkCycle = 20
+      val totalWorkCycle = 100
 }

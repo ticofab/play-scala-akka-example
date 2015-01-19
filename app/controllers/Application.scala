@@ -18,12 +18,12 @@ object Application extends Controller {
   val bossActor = ActorSystem().actorOf(Props[BossActor])
 
   def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+    Ok("I'm alive!")
   }
 
   def newClient = Action.async {
     val futureId = (bossActor ? ClientConnected)(Consts.askTimeout).mapTo[Int]
-    futureId.map(id => Ok(id.toString))
+    futureId.map(id => Ok(views.html.index(id.toString)))
   }
 
   def openWebsocket(clientId: Int) = WebSocket.tryAccept[String] {

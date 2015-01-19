@@ -6,7 +6,7 @@ import controllers.Application
 import messages._
 
 class BossActor extends Actor {
-  var clientIdCounter = 0
+  var clientIdCounter = 1
 
   override def receive: Receive = {
 
