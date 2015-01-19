@@ -1,4 +1,4 @@
-@(id: String)
+@(id: String, totalWorkCycles: String)
 <!DOCTYPE html>
 
 <html>
@@ -11,7 +11,7 @@
     <script>
         $(document).ready(function() {
             console.log("ready!");
-            connectToWS("ws://localhost:9000/register?id=" + @id);
+            connectToWS(@id);
         });
     </script>
 </head>
@@ -19,7 +19,10 @@
     <div>
         <div>Hi, you're client number @id</div>
         <div>
-            Work cycles completed: <span id="workCycle">0</span>
+            Active clients: <span id="activeClients">1</span>
+        </div>
+        <div>
+            Work cycles completed: <span id="workCycle">0</span> of @totalWorkCycles
         </div>
     </div>
 

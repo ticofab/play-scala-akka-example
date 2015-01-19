@@ -4,7 +4,7 @@ import actors.{BossActor, WebsocketMessageActor}
 import akka.actor.{ActorSystem, Props}
 import akka.pattern.ask
 import consts.Consts
-import messages.{ClientConnected, ClientRegistersForMessages}
+import messages.{ClientRegistersForActiveClients, ClientConnected, ClientRegistersForMessages}
 import play.api.libs.iteratee.{Enumerator, Iteratee}
 import play.api.mvc.{Action, Controller, WebSocket}
 
@@ -17,22 +17,26 @@ object Application extends Controller {
   val messengerActor = ActorSystem().actorOf(Props[WebsocketMessageActor])
   val bossActor = ActorSystem().actorOf(Props[BossActor])
 
-  def index = Action {
-    Ok("I'm alive!")
-  }
-
   def newClient = Action.async {
     val futureId = (bossActor ? ClientConnected)(Consts.askTimeout).mapTo[Int]
-    futureId.map(id => Ok(views.html.index(id.toString)))
+    futureId.map(id => Ok(views.html.index(id.toString, Consts.totalWorkCycle.toString)))
   }
 
-  def openWebsocket(clientId: Int) = WebSocket.tryAccept[String] {
+  def getCycles(clientId: Int) = WebSocket.tryAccept[String] {
     request =>
       val futureWSLink: Future[WSLink] = (messengerActor ? ClientRegistersForMessages(clientId))(Consts.askTimeout).mapTo[WSLink]
       futureWSLink map {
         case x: WSLink => Right(x)
         case _ => Left(NotFound)
       }
+  }
 
+  def getActive = WebSocket.tryAccept[String] {
+    request =>
+      val futureWSLink: Future[WSLink] = (messengerActor ? ClientRegistersForActiveClients)(Consts.askTimeout).mapTo[WSLink]
+      futureWSLink map {
+        case x: WSLink => Right(x)
+        case _ => Left(NotFound)
+      }
   }
 }

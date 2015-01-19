@@ -7,6 +7,7 @@ import messages._
 
 class BossActor extends Actor {
   var clientIdCounter = 1
+  var activeClients = 0
 
   override def receive: Receive = {
 
@@ -16,6 +17,8 @@ class BossActor extends Actor {
       newWorker ! StartWorking(clientIdCounter)
       sender ! clientIdCounter
       clientIdCounter = clientIdCounter + 1
+      activeClients = activeClients + 1
+      Application.messengerActor ! ActiveClientsChanged(activeClients)
 
     case WorkCycleCompleted(clientId, cycle) =>
       // forward the information to the corresponding message actor
@@ -23,6 +26,8 @@ class BossActor extends Actor {
       if (cycle == Consts.totalWorkCycle) {
         // this actor is done with his work
         sender ! PoisonPill
+        activeClients = activeClients - 1
+        Application.messengerActor ! ActiveClientsChanged(activeClients)
       }
 
   }
