@@ -1,5 +1,8 @@
 # Play Scala Akka Example
 
+To see it in action, refer to [https://play-akka-scala-example.herokuapp.com](https://play-akka-scala-example.herokuapp.com). Open a couple of browser windows there and see the messages you get back.
+
+---
 
 This is an example backend service built using the Play! Framework, which combines the power of Scala and Akka. It uses the Actor pattern to handle requests from both HTTP and WebSocket clients.
 
@@ -11,8 +14,7 @@ When the BossActor receives a "WorkCycleCompleted" message, it notifies the Mess
 
 The second WebSocket connection is used by the MessengerActor to notify the client about the total amount of active WorkerActors. 
 
-
-
+![](https://github.com/ticofab/play-scala-akka-example/blob/master/docs/flow.png)
 
 
 ## LICENSE
