@@ -16,6 +16,10 @@ The second WebSocket connection is used by the MessengerActor to notify the clie
 
 ![](https://github.com/ticofab/play-scala-akka-example/blob/master/docs/flow.png)
 
+---
+
+I wrote a presentation about WebSockets in Play!. Find it [here on SlideShare](http://www.slideshare.net/FabioTiriticco/websocket-wiith-scala-and-play-framework).
+
 
 ## LICENSE
 
